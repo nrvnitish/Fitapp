@@ -1,0 +1,33 @@
+<DietScreen>:
+    MDBoxLayout:
+        orientation: 'vertical'
+        padding: 20
+        spacing: 15
+
+        MDLabel:
+            text: "Diet Plans"
+            font_style: "H5"
+            halign: "center"
+
+        ScrollView:
+            MDLabel:
+                id: diet_list
+                text: ""
+                halign: "left"
+                size_hint_y: None
+                height: self.texture_size[1]
+
+        MDTextField:
+            id: new_diet
+            hint_text: "Add New Diet Item"
+            mode: "rectangle"
+
+        MDRaisedButton:
+            text: "Add"
+            pos_hint: {"center_x": 0.5}
+            on_press: root.add_diet_item()
+
+        MDTextButton:
+            text: "Back"
+            pos_hint: {"center_x": 0.5}
+            on_press: app.root.current = "home"

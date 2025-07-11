@@ -1,0 +1,20 @@
+<GraphScreen>:
+    name: "graph"
+    MDBoxLayout:
+        orientation: 'vertical'
+        padding: 10
+        spacing: 10
+
+        MDLabel:
+            text: "📊 Weekly Progress"
+            halign: "center"
+            font_style: "H5"
+
+        BoxLayout:
+            id: graph_layout
+            size_hint_y: 0.85
+
+        MDTextButton:
+            text: "Back"
+            pos_hint: {"center_x": 0.5}
+            on_press: app.root.current = "home"

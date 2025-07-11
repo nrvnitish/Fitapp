@@ -1,0 +1,49 @@
+<GoalScreen>:
+    MDBoxLayout:
+        orientation: 'vertical'
+        padding: 20
+        spacing: 10
+
+        MDLabel:
+            text: "Set Your Fitness Goals"
+            font_style: "H5"
+            halign: "center"
+
+        MDTextField:
+            id: weight
+            hint_text: "Target Weight (kg)"
+            input_filter: 'float'
+            mode: "rectangle"
+
+        MDTextField:
+            id: steps
+            hint_text: "Daily Step Goal"
+            input_filter: 'int'
+            mode: "rectangle"
+
+        MDTextField:
+            id: workouts
+            hint_text: "Daily Workouts Goal"
+            input_filter: 'int'
+            mode: "rectangle"
+
+        MDTextField:
+            id: calories
+            hint_text: "Calorie Intake Goal"
+            input_filter: 'int'
+            mode: "rectangle"
+
+        MDRaisedButton:
+            text: "Save Goals"
+            pos_hint: {"center_x": 0.5}
+            on_press: root.save_goals()
+
+        MDLabel:
+            id: status
+            text: ""
+            halign: "center"
+
+        MDTextButton:
+            text: "Back"
+            pos_hint: {"center_x": 0.5}
+            on_press: app.root.current = "home"

@@ -1,0 +1,42 @@
+<TrackerScreen>:
+    MDBoxLayout:
+        orientation: 'vertical'
+        padding: 20
+        spacing: 10
+
+        MDLabel:
+            text: "Steps & Calorie Tracker"
+            font_style: "H5"
+            halign: "center"
+
+        MDTextField:
+            id: steps
+            hint_text: "Steps Taken Today"
+            input_filter: 'int'
+            mode: "rectangle"
+
+        MDTextField:
+            id: calories
+            hint_text: "Calories Consumed Today"
+            input_filter: 'int'
+            mode: "rectangle"
+
+        MDRaisedButton:
+            text: "Save"
+            pos_hint: {"center_x": 0.5}
+            on_press: root.save_tracker()
+
+        MDLabel:
+            id: status
+            text: ""
+            halign: "center"
+
+        MDLabel:
+            id: progress
+            text: ""
+            halign: "center"
+
+        MDTextButton:
+            text: "Back to Home"
+            pos_hint: {"center_x": 0.5}
+            on_press: app.root.current = "home"

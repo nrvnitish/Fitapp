@@ -1,0 +1,37 @@
+<BMIScreen>:
+    MDBoxLayout:
+        orientation: 'vertical'
+        padding: 20
+        spacing: 15
+
+        MDLabel:
+            text: "BMI Calculator"
+            font_style: "H5"
+            halign: "center"
+
+        MDTextField:
+            id: height
+            hint_text: "Height in cm"
+            mode: "rectangle"
+            input_filter: 'float'
+
+        MDTextField:
+            id: weight
+            hint_text: "Weight in kg"
+            mode: "rectangle"
+            input_filter: 'float'
+
+        MDRaisedButton:
+            text: "Calculate BMI"
+            pos_hint: {"center_x": 0.5}
+            on_press: root.calculate_bmi()
+
+        MDLabel:
+            id: result
+            text: ""
+            halign: "center"
+
+        MDTextButton:
+            text: "Back"
+            pos_hint: {"center_x": 0.5}
+            on_press: app.root.current = "home"
