@@ -1,0 +1,38 @@
+name: Build Kivy Android APK
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+
+    - name: Install Dependencies
+      run: |
+        sudo apt update && sudo apt install -y build-essential openjdk-17 zlib1g-dev
+        pip install buildozer==1.4.0 kivy kivymd matplotlib
+
+    - name: Initialize Buildozer
+      run: |
+        buildozer init
+        sed -i "s/requirements = .*/requirements = python3,kivy,kivymd,matplotlib/" buildozer.spec
+        sed -i "s/source.include_exts = .*/source.include_exts = py,kv,png,jpg,ttf/" buildozer.spec
+        sed -i "s/android.permissions = .*/android.permissions = INTERNET,VIBRATE/" buildozer.spec
+
+    - name: Build APK
+      run: buildozer -v android debug
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: fitness-app-apk
+        path: bin/*.apk
