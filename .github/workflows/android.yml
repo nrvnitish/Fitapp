@@ -1,4 +1,4 @@
-name: Build Kivy Android uAPK
+name: Build Kivy Android APK
 
 on:
   push:
@@ -10,41 +10,47 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: 3.10
 
-      - name: Setup Java (for Buildozer)
+      - name: Setup Java
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: 17
 
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y python3-pip zip unzip git build-essential libncurses5 libffi-dev libssl-dev libsqlite3-dev zlib1g-dev openjdk-17-jdk
-          pip install --upgrade pip
-          pip install buildozer cython
+          sudo apt install -y zip unzip git python3-pip openjdk-17-jdk libffi-dev libssl-dev libnss3 libc6 libncurses-dev build-essential
 
-      - name: Remove corrupted spec file if exists
+      - name: Install Buildozer
         run: |
-          if [ -f "buildozer.spec" ]; then
-            head -n 1 buildozer.spec | grep 'app' || rm buildozer.spec
+          pip install --upgrade pip
+          pip install buildozer Cython
+
+      - name: Clean corrupted spec file if exists
+        run: |
+          if grep -q 'wq' buildozer.spec 2>/dev/null; then
+            rm buildozer.spec
           fi
 
       - name: Initialize Buildozer
-        run: buildozer init
+        run: |
+          if [ ! -f buildozer.spec ]; then
+            buildozer init
+          fi
 
       - name: Build APK
         run: buildozer -v android debug
 
       - name: Upload APK
-        uses: actions/upload-artifact@4
+        uses: actions/upload-artifact@v3
         with:
           name: fitapp-apk
           path: bin/*.apk
