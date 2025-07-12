@@ -19,3 +19,4 @@ android.minapi = 21
 android.ndk = 23b
 android.arch = armeabi-v7a
 android.permissions = INTERNET,WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE
+android.sdk_path = /home/runner/android-sdk
