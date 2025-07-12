@@ -1,42 +1,50 @@
-name: Build Kivy Android APK
+name: Build Kivy Android uAPK
 
 on:
   push:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Setup Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.10'
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
 
-    - name: Setup Java
-      uses: actions/setup-java@v2
-      with:
-        distribution: 'temurin'
-        java-version: '17'
+      - name: Setup Java (for Buildozer)
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
 
-   - name: Install dependencies
-      run: |
-        sudo apt update
-        sudo apt install -y python3-pip zip unzip git build-essential libncurses-dev libffi-dev libssl-dev libsqlite3-dev zlib1g-dev openjdk-17-jdk
-        pip install --upgrade pip
-        pip install buildozer cython
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y python3-pip zip unzip git build-essential libncurses5 libffi-dev libssl-dev libsqlite3-dev zlib1g-dev openjdk-17-jdk
+          pip install --upgrade pip
+          pip install buildozer cython
 
-    - name: Remove corrupted spec file
-      run: rm -f buildozer.spec
+      - name: Remove corrupted spec file if exists
+        run: |
+          if [ -f "buildozer.spec" ]; then
+            head -n 1 buildozer.spec | grep 'app' || rm buildozer.spec
+          fi
 
-    - name: Initialize Buildozer
-      run: |
-        buildozer init
-        sed -i "s/^requirements =.*/requirements = python3,kivy,kivymd,matplotlib/" buildozer.spec
-        sed -i "s/^source.include_exts =.*/source.include_exts = py,kv,png,jpg,ttf/" buildozer.spec
-        sed -i "s/^android.permissions =.*/android.permissions = INTERNET,VIBRATE/" buildozer.spec
+      - name: Initialize Buildozer
+        run: buildozer init
 
-    - name: Build APK
-      run: buildozer android debug
+      - name: Build APK
+        run: buildozer -v android debug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@4
+        with:
+          name: fitapp-apk
+          path: bin/*.apk
