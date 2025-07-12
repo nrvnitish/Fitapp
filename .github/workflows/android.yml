@@ -27,7 +27,15 @@ jobs:
         sudo apt update && sudo apt install -y build-essential zlib1g-dev
         pip install buildozer==1.4.0 kivy kivymd matplotlib
 
+- name: Remove corrupted spec file
+      run: rm -f buildozer.spec
+
     - name: Initialize Buildozer
+      run: |
+        buildozer init
+        sed -i "s/requirements = .*/requirements = python3,kivy,kivymd,matplotlib/" buildozer.spec
+        sed -i "s/source.include_exts = .*/source.include_exts = py,kv,png,jpg,ttf/" buildozer.spec
+        sed -i "s/android.permissions = .*/android.permissions = INTERNET,VIBRATE/" buildozer.spec    - name: Initialize Buildozer
       run: |
         buildozer init
         sed -i "s/requirements = .*/requirements = python3,kivy,kivymd,matplotlib/" buildozer.spec
