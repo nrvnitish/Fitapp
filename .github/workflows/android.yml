@@ -16,9 +16,15 @@ jobs:
       with:
         python-version: "3.10"
 
+    - name: Setup Java
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
     - name: Install Dependencies
       run: |
-        sudo apt update && sudo apt install -y build-essential openjdk-17 zlib1g-dev
+        sudo apt update && sudo apt install -y build-essential zlib1g-dev
         pip install buildozer==1.4.0 kivy kivymd matplotlib
 
     - name: Initialize Buildozer
