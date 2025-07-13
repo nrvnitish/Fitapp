@@ -34,7 +34,7 @@ jobs:
         export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
 
         yes | sdkmanager --sdk_root=${ANDROID_HOME} --licenses
-        yes | sdkmanager --sdk_root=${ANDROID_HOME} "platform-tools" "platforms;android-31" "build-tools;31.0.0"
+        yes | sdkmanager --sdk_root=${ANDROID_HOME} "platform-tools" "platforms;android-31" "build-tools;33.0.2"
 
     - name: Build APK
       run: |
