@@ -1,5 +1,4 @@
-name: Build Kivy Android APK
-
+name: Build app
 on:
   push:
     branches: [main]
