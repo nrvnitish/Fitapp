@@ -9,44 +9,56 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-    - name: Set up Python
+    - name: Setup Python
       uses: actions/setup-python@v4
       with:
-        python-version: "3.11"
+        python-version: '3.11'
 
-    - name: Install dependencies
+    - name: Install system deps
       run: |
         sudo apt update
         sudo apt install -y zip unzip openjdk-17-jdk python3-pip
+
+    - name: Install Buildozer & Cython
+      run: |
         pip install --upgrade pip
         pip install buildozer cython
 
-    - name: Install Android SDK
+    - name: Setup Android SDK Command Tools
       run: |
-        mkdir -p $HOME/android-sdk/cmdline-tools
-        cd $HOME/android-sdk/cmdline-tools
-        curl -o tools.zip https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip
-        unzip tools.zip
+        mkdir -p "$HOME/android-sdk/cmdline-tools"
+        cd "$HOME/android-sdk/cmdline-tools"
+        curl -sSLO https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip
+        unzip -q commandlinetools-linux-10406996_latest.zip
         mv cmdline-tools latest
+      shell: bash
 
-        echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
+    - name: Configure SDK paths
+      run: |
         echo "ANDROID_SDK_ROOT=$HOME/android-sdk" >> $GITHUB_ENV
+        echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
         echo "$HOME/android-sdk/cmdline-tools/latest/bin" >> $GITHUB_PATH
         echo "$HOME/android-sdk/platform-tools" >> $GITHUB_PATH
 
-    - name: Accept licenses and install specific SDK packages
+    - name: Accept licenses & install required SDK components
       run: |
-        yes | sdkmanager --licenses
-        yes | sdkmanager "platform-tools" "platforms;android-31" "build-tools;33.0.2"
+        sdkmanager --sdk_root=$HOME/android-sdk --licenses <<< "y\n"
+        sdkmanager --sdk_root=$HOME/android-sdk \
+          "platform-tools" \
+          "platforms;android-31" \
+          "build-tools;31.0.0"
+      shell: bash
 
-    - name: Build APK
+    - name: Build APK via Buildozer
       run: |
         buildozer android debug
+      env:
+        ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
+        ANDROID_HOME: ${{ env.ANDROID_HOME }}
 
-    - name: Upload APK
+    - name: Upload APK artifact
       uses: actions/upload-artifact@v4
       with:
         name: fitapp-apk
