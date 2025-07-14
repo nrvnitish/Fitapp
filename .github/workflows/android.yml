@@ -44,11 +44,14 @@ jobs:
 
     - name: Accept licenses & install required SDK components
       run: |
-        sdkmanager --sdk_root=$HOME/android-sdk --licenses <<< "y\n"
-        sdkmanager --sdk_root=$HOME/android-sdk \
+        yes | sdkmanager --sdk_root=$HOME/android-sdk --licenses
+        yes | sdkmanager --sdk_root=$HOME/android-sdk \
           "platform-tools" \
           "platforms;android-31" \
           "build-tools;31.0.0"
+        # Prevent Buildozer from trying to download 36.0.0
+        mkdir -p ~/.buildozer/android/platform/android-sdk/build-tools/36.0.0
+        touch ~/.buildozer/android/platform/android-sdk/build-tools/36.0.0/.installed
       shell: bash
 
     - name: Build APK via Buildozer
