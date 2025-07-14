@@ -44,7 +44,7 @@ jobs:
 
     - name: Accept licenses & install required SDK components
       run: |
-        yes | sdkmanager --sdk_root=$HOME/android-sdk --licenses
+        yes | sdkmanager --licenses > /dev/null || true
         yes | sdkmanager --sdk_root=$HOME/android-sdk \
           "platform-tools" \
           "platforms;android-31" \
